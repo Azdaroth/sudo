@@ -25,7 +25,11 @@ Cmnd_Alias <%= a[:name].upcase %> = <%= a[:command_list].join(', ') %>
 
 <% @sudoers_groups.each do |group| -%>
 # Members of the group '<%= group %>' may gain root privileges
+<% if @passwordless.to_s == "true" || @passwordless.to_s == "false" %>
 %<%= group %> ALL=(ALL) <%= "NOPASSWD:" if @passwordless %>ALL
+<% elsif !@passwordless.to_s.empty? %>
+%<%= group %> ALL=(ALL) NOPASSWD: <%= @passwordless %>
+<% end %>
 <% end -%>
 
 <%= "#includedir #{node['authorization']['sudo']['prefix']}/sudoers.d" if @include_sudoers_d  %>
