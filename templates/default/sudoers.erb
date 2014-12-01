@@ -16,7 +16,11 @@ Cmnd_Alias <%= a[:name].upcase %> = <%= a[:command_list].join(', ') %>
 <% end -%>
 
 <% @sudoers_users.each do |user| -%>
-<%= user %> ALL=(ALL) <%= "NOPASSWD:" if @passwordless %>ALL
+  <% if @passwordless.to_s == "true" || @passwordless.to_s == "false" %>
+    <%= user %> ALL=(ALL) <%= "NOPASSWD:" if @passwordless %>ALL
+  <% elsif !@passwordless.to_s.empty? %>
+    <%= user %> ALL=(ALL) NOPASSWD: <%= @passwordless %>
+  <% end %>
 <% end -%>
 
 <% @sudoers_groups.each do |group| -%>
